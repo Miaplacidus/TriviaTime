@@ -1,7 +1,12 @@
 <div>
   <ul class='list-group'>
     <li ng-repeat="question in questions | orderByPriority" class='list-group-item'>
-      <div>
+
+        <div class='pull-right'>
+          <a href="#/questions/{{question.$id}}">Edit</a>
+          <a href="deleteQuestion(question.$id)">Delete</a>
+        </div>
+
         <h4>{{question.question}}</h4>
         <div>
           <input type='radio' name="{{question.$id}}-answer" value='0'/>
@@ -15,7 +20,7 @@
           <input type='radio' name="{{question.$id}}-answer" value='2'/>
           {{question.option3}}
         </div>
-      </div>
+
     </li>
   </ul>
 

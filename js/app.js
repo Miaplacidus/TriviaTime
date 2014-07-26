@@ -7,6 +7,9 @@ triviaApp.config(['$routeProvider', function($routeProvider){
   }).when('/questions/new', {
     templateUrl: 'partials/question-form.html',
     controller: 'QuestionNewCtrl'
+  }).when('questions/:questionId',{
+    templateUrl: 'partials/question-form.html',
+    controller: 'QuestionDetailCtrl'
   }).otherwise({
     redirectTo: '/questions'
   })
@@ -16,6 +19,10 @@ triviaApp.controller('QuestionListCtrl', ['$scope', '$firebase',
   function($scope, $firebase) {
     var firebaseUrl = "https://crackling-fire-2657.firebaseio.com/questions";
     $scope.questions = $firebase(new Firebase(firebaseUrl));
+
+    $scope.deleteQuestion = function(questionId){
+      $scope.questions.$remove(questionId);
+    }
 }]);
 
 triviaApp.controller("QuestionNewCtrl", ['$scope', '$firebase', '$location',
@@ -30,3 +37,21 @@ triviaApp.controller("QuestionNewCtrl", ['$scope', '$firebase', '$location',
       });
     };
 }]);
+
+triviaApp.controller("QuestionDetailCtrl", ['$scope', '$firebase', '$routeParams',
+  function($scope, $firebase, $routeParams){
+    var firebaseUrl = "https://crackling-fire-2657.firebaseio.com/questions/" + $routeParams.questionId;
+    $scope.question = $firebase(new Firebase(firebaseUrl));
+
+    $scpoe.persistQuestion = function(question) {
+      $scope.question.$update({
+        question : question.question,
+        option1: question.option1,
+        option2: question.option2,
+        option3: question.option3,
+        answer: question.answer
+      }).then(function(ref){
+        $location.url('/questions');
+      });
+    };
+  }]);
